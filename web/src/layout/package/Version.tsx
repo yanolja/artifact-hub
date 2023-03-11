@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Repository, SearchFiltersURL } from '../../types';
 import buildPackageURL from '../../utils/buildPackageURL';
@@ -21,16 +21,20 @@ interface Props {
 }
 
 const Version = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
   const openPackagePage = () => {
     setIsLoading(true);
 
-    history.push({
-      pathname: buildPackageURL(props.normalizedName, props.repository, props.version, true),
-      state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
-    });
+    navigate(
+      {
+        pathname: buildPackageURL(props.normalizedName, props.repository, props.version, true),
+      },
+      {
+        state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
+      }
+    );
   };
 
   useEffect(() => {

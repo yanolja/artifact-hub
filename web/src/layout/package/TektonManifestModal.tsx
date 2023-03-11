@@ -1,7 +1,7 @@
 import { isUndefined } from 'lodash';
 import { useEffect, useState } from 'react';
 import { GoFileCode } from 'react-icons/go';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 
@@ -19,24 +19,24 @@ interface Props {
 }
 
 const TektonManifestModal = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [openStatus, setOpenStatus] = useState<boolean>(false);
 
   const onOpenModal = () => {
     if (!isUndefined(props.manifestRaw)) {
       setOpenStatus(true);
-      history.replace({
-        search: '?modal=manifest',
+      navigate('?modal=manifest', {
         state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
+        replace: true,
       });
     }
   };
 
   const onCloseModal = () => {
     setOpenStatus(false);
-    history.replace({
-      search: '',
+    navigate('', {
       state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
+      replace: true,
     });
   };
 

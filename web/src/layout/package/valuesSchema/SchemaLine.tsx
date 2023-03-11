@@ -20,7 +20,7 @@ interface Props {
   isRequired: boolean;
   className?: string;
   path?: string;
-  activePath?: string;
+  activePath?: string | null;
   onActivePathChange: (path?: string) => void;
   saveSelectedOption: (path: string, index: number) => void;
   hasDecorator?: boolean;

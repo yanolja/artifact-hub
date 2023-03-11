@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { GoCheck } from 'react-icons/go';
 import { MdClose } from 'react-icons/md';
 import { VscListTree } from 'react-icons/vsc';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { isDocument, isMap, isSeq, LineCounter, parseDocument } from 'yaml';
 
 import API from '../../../api';
@@ -24,8 +24,8 @@ interface Props {
   sortedVersions: VersionData[];
   normalizedName: string;
   visibleValues: boolean;
-  compareVersionTo?: string;
-  visibleValuesPath?: string;
+  compareVersionTo?: string | null;
+  visibleValuesPath?: string | null;
   searchUrlReferer?: SearchFiltersURL;
   fromStarredPage?: boolean;
 }
@@ -63,7 +63,7 @@ const getPathsPerLine = (values: any): Lines => {
 };
 
 const Values = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [openStatus, setOpenStatus] = useState<boolean>(false);
   const [values, setValues] = useState<string | undefined | null>();
   const [currentPkgId, setCurrentPkgId] = useState<string | undefined>(undefined);
@@ -77,9 +77,9 @@ const Values = (props: Props) => {
   useOutsideClick([ref], visibleDropdown, () => setVisibleDropdown(false));
 
   const cleanUrl = () => {
-    history.replace({
-      search: '',
+    navigate('', {
       state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
+      replace: true,
     });
   };
 
@@ -88,12 +88,17 @@ const Values = (props: Props) => {
     if (!isUndefined(q.selectedLine) && !isUndefined(lines)) {
       selectedPath = lines[parseInt(q.selectedLine)];
     }
-    history.replace({
-      search: `?modal=values${selectedPath ? `&path=${selectedPath}` : ''}${
-        q.template ? `&template=${q.template}` : ''
-      }${q.compareTo ? `&compare-to=${q.compareTo}` : ''}`,
-      state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
-    });
+    navigate(
+      {
+        search: `?modal=values${selectedPath ? `&path=${selectedPath}` : ''}${
+          q.template ? `&template=${q.template}` : ''
+        }${q.compareTo ? `&compare-to=${q.compareTo}` : ''}`,
+      },
+      {
+        state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
+        replace: true,
+      }
+    );
   };
 
   async function getValues() {

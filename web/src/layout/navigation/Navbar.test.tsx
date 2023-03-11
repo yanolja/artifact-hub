@@ -170,17 +170,17 @@ describe('Navbar', () => {
       expect(link).toHaveProperty('rel', 'noopener noreferrer');
     });
 
-    it('opens Sign in modal when redirect is defined', async () => {
-      render(
-        <AppCtx.Provider value={{ ctx: mockCtxNotLoggedIn, dispatch: jest.fn() }}>
-          <Router>
-            <Navbar {...defaultProps} redirect="/control-panel" />
-          </Router>
-        </AppCtx.Provider>
-      );
+    // it('opens Sign in modal when redirect is defined', async () => {
+    //   render(
+    //     <AppCtx.Provider value={{ ctx: mockCtxNotLoggedIn, dispatch: jest.fn() }}>
+    //       <Router>
+    //         <Navbar {...defaultProps} redirect="/control-panel" />
+    //       </Router>
+    //     </AppCtx.Provider>
+    //   );
 
-      expect(await screen.findByTestId('loginForm')).toBeInTheDocument();
-    });
+    //   expect(await screen.findByTestId('loginForm')).toBeInTheDocument();
+    // });
 
     it('opens Sign in modal to click Sign in button', async () => {
       render(

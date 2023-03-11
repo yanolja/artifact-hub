@@ -4,7 +4,7 @@ import { MouseEvent as ReactMouseEvent, useContext, useEffect, useState } from '
 import { IoMdRefresh, IoMdRefreshCircle } from 'react-icons/io';
 import { MdAdd, MdAddCircle } from 'react-icons/md';
 import { RiArrowLeftRightLine } from 'react-icons/ri';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import API from '../../../api';
 import { AppCtx, unselectOrg } from '../../../context/AppCtx';
@@ -26,15 +26,15 @@ interface ModalStatus {
 
 interface Props {
   onAuthError: () => void;
-  repoName?: string;
-  visibleModal?: string;
-  activePage?: string;
+  repoName?: string | null;
+  visibleModal: string | null;
+  activePage: string | null;
 }
 
 const DEFAULT_LIMIT = 10;
 
 const RepositoriesSection = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { ctx, dispatch } = useContext(AppCtx);
   const [isLoading, setIsLoading] = useState(false);
   const [modalStatus, setModalStatus] = useState<ModalStatus>({
@@ -59,11 +59,14 @@ const RepositoriesSection = (props: Props) => {
   };
 
   const updatePageNumber = () => {
-    history.replace({
-      search: `?page=${activePage}${props.repoName ? `&repo-name=${props.repoName}` : ''}${
-        props.visibleModal ? `&modal=${props.visibleModal}` : ''
-      }`,
-    });
+    navigate(
+      {
+        search: `?page=${activePage}${props.repoName ? `&repo-name=${props.repoName}` : ''}${
+          props.visibleModal ? `&modal=${props.visibleModal}` : ''
+        }`,
+      },
+      { replace: true }
+    );
   };
 
   async function fetchRepositories() {
@@ -94,9 +97,7 @@ const RepositoriesSection = (props: Props) => {
           // Clean query string if repo is not available
           if (isUndefined(activeRepo)) {
             dispatch(unselectOrg());
-            history.replace({
-              search: `?page=${activePage}`,
-            });
+            navigate(`?page=${activePage}`);
           }
         } else {
           updatePageNumber();

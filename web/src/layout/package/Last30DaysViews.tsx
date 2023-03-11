@@ -3,7 +3,7 @@ import moment from 'moment';
 import { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { HiPlusCircle } from 'react-icons/hi';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { PackageViewsStats, RepositoryKind, SearchFiltersURL } from '../../types';
 import { getSeriesDataPerPkgVersionViewsWithTimestamp, sumViewsPerVersionsWithTimestamp } from '../../utils/viewsStats';
@@ -36,7 +36,9 @@ const prepareSeries = (stats: PackageViewsStats, version?: string): Series[] => 
 };
 
 const Last30DaysViews = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [series, setSeries] = useState<any[]>([]);
 
   const getLegend = (): string => {
@@ -186,14 +188,18 @@ const Last30DaysViews = (props: Props) => {
               <div className="d-none d-md-block">
                 <button
                   onClick={() => {
-                    history.push({
-                      pathname: history.location.pathname,
-                      hash: 'views',
-                      state: {
-                        searchUrlReferer: props.searchUrlReferer,
-                        fromStarredPage: props.fromStarredPage,
+                    navigate(
+                      {
+                        pathname: location.pathname,
+                        hash: 'views',
                       },
-                    });
+                      {
+                        state: {
+                          searchUrlReferer: props.searchUrlReferer,
+                          fromStarredPage: props.fromStarredPage,
+                        },
+                      }
+                    );
                   }}
                   className={`btn btn-link ps-0 position-relative text-primary ${styles.btn}`}
                   disabled={series.length === 0}

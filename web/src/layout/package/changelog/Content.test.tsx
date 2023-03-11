@@ -76,6 +76,7 @@ const defaultProps = {
   setOpenStatus: jest.fn(),
   onCloseModal: jest.fn(),
   updateVersionInQueryString: updateVersionInQueryStringMock,
+  state: null,
 };
 
 describe('Changelog content ', () => {

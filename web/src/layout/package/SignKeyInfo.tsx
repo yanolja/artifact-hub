@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { isNull, isUndefined } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { FaKey } from 'react-icons/fa';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { HelmChartSignKey, RepositoryKind, SearchFiltersURL, Signature } from '../../types';
 import ElementWithTooltip from '../common/ElementWithTooltip';
@@ -21,26 +21,31 @@ interface Props {
 }
 
 const SignKeyInfo = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [openStatus, setOpenStatus] = useState<boolean>(false);
 
   const onClose = () => {
     setOpenStatus(false);
-    history.replace({
-      search: '',
+    navigate('', {
       state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
+      replace: true,
     });
   };
 
-  const onOpen = useCallback(() => {
-    if (props.signed && props.repoKind === RepositoryKind.Helm && !isUndefined(props.signKey)) {
-      setOpenStatus(true);
-      history.replace({
-        search: '?modal=key-info',
-        state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
-      });
-    }
-  }, [history, props.fromStarredPage, props.repoKind, props.searchUrlReferer, props.signKey, props.signed]);
+  const onOpen = useCallback(
+    () => {
+      if (props.signed && props.repoKind === RepositoryKind.Helm && !isUndefined(props.signKey)) {
+        setOpenStatus(true);
+        navigate('?modal=key-info', {
+          state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
+          replace: true,
+        });
+      }
+    },
+    /* eslint-disable react-hooks/exhaustive-deps */
+    [props.fromStarredPage, props.repoKind, props.searchUrlReferer, props.signKey, props.signed]
+    /* eslint-enable react-hooks/exhaustive-deps */
+  );
 
   useEffect(() => {
     if (props.visibleKeyInfo && !openStatus) {

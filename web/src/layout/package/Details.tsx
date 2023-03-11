@@ -43,11 +43,11 @@ interface Props {
   searchUrlReferer?: SearchFiltersURL;
   fromStarredPage?: boolean;
   visibleSecurityReport: boolean;
-  visibleImage?: string;
-  visibleTarget?: string;
-  visibleSection?: string;
+  visibleImage?: string | null;
+  visibleTarget?: string | null;
+  visibleSection?: string | null;
   channels?: Channel[] | null;
-  eventId?: string;
+  eventId?: string | null;
   viewsStats?: PackageViewsStats;
   version?: string;
 }

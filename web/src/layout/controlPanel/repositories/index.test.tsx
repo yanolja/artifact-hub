@@ -18,6 +18,8 @@ const onAuthErrorMock = jest.fn();
 
 const defaultProps = {
   onAuthError: onAuthErrorMock,
+  visibleModal: null,
+  activePage: null,
 };
 
 const mockHistoryReplace = jest.fn();

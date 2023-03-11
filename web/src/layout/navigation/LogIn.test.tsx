@@ -23,6 +23,8 @@ window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
 const defaultProps = {
   openLogIn: true,
   setOpenLogIn: jest.fn(),
+  redirect: null,
+  visibleModal: null,
 };
 
 describe('LogIn', () => {

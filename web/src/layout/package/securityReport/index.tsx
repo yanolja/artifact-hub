@@ -29,10 +29,10 @@ interface Props {
   version: string;
   createdAt?: number;
   visibleSecurityReport: boolean;
-  visibleImage?: string;
-  visibleTarget?: string;
-  visibleSection?: string;
-  eventId?: string;
+  visibleImage?: string | null;
+  visibleTarget?: string | null;
+  visibleSection?: string | null;
+  eventId?: string | null;
   searchUrlReferer?: SearchFiltersURL;
   fromStarredPage?: boolean;
 }

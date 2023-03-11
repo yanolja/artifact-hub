@@ -2,7 +2,7 @@ import merger from 'json-schema-merge-allof';
 import { isUndefined } from 'lodash';
 import { useEffect, useState } from 'react';
 import { CgListTree } from 'react-icons/cg';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import API from '../../../api';
 import { JSONSchema } from '../../../jsonschema';
@@ -21,7 +21,7 @@ interface Props {
   visibleValuesSchema: boolean;
   searchUrlReferer?: SearchFiltersURL;
   fromStarredPage?: boolean;
-  visibleValuesSchemaPath?: string;
+  visibleValuesSchemaPath?: string | null;
 }
 
 async function enrichValuesSchema(schema: JSONSchema) {
@@ -37,16 +37,16 @@ async function enrichValuesSchema(schema: JSONSchema) {
 }
 
 const ValuesSchema = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [openStatus, setOpenStatus] = useState<boolean>(false);
   const [valuesSchema, setValuesSchema] = useState<JSONSchema | undefined | null>();
   const [currentPkgId, setCurrentPkgId] = useState<string | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const cleanUrl = () => {
-    history.replace({
-      search: '',
+    navigate('', {
       state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
+      replace: true,
     });
   };
 
@@ -71,16 +71,16 @@ const ValuesSchema = (props: Props) => {
 
   const onOpenModal = () => {
     getValuesSchema();
-    history.replace({
-      search: `?modal=values-schema${props.visibleValuesSchemaPath ? `&path=${props.visibleValuesSchemaPath}` : ''}`,
+    navigate(`?modal=values-schema${props.visibleValuesSchemaPath ? `&path=${props.visibleValuesSchemaPath}` : ''}`, {
       state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
+      replace: true,
     });
   };
 
   const onPathChange = (path?: string) => {
-    history.replace({
-      search: `?modal=values-schema${path ? `&path=${path}` : ''}`,
+    navigate(`?modal=values-schema${path ? `&path=${path}` : ''}`, {
       state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
+      replace: true,
     });
   };
 

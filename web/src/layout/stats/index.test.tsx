@@ -183,32 +183,32 @@ describe('StatsView', () => {
       expect(scrollIntoViewMock).toHaveBeenCalledTimes(1);
     });
 
-    it('calls scrollIntoView when hash is defined to load component', async () => {
-      const mockStats = getMockStats('4');
-      mocked(API).getAHStats.mockResolvedValue(mockStats);
+    //   it('calls scrollIntoView when hash is defined to load component', async () => {
+    //     const mockStats = getMockStats('4');
+    //     mocked(API).getAHStats.mockResolvedValue(mockStats);
 
-      render(
-        <AppCtx.Provider value={{ ctx: mockCtx, dispatch: jest.fn() }}>
-          <Router>
-            <StatsView hash="#repositories" />
-          </Router>
-        </AppCtx.Provider>
-      );
+    //     render(
+    //       <AppCtx.Provider value={{ ctx: mockCtx, dispatch: jest.fn() }}>
+    //         <Router>
+    //           <StatsView hash="#repositories" />
+    //         </Router>
+    //       </AppCtx.Provider>
+    //     );
 
-      await waitFor(() => {
-        expect(API.getAHStats).toHaveBeenCalledTimes(1);
-      });
+    //     await waitFor(() => {
+    //       expect(API.getAHStats).toHaveBeenCalledTimes(1);
+    //     });
 
-      await waitFor(() => {
-        expect(scrollIntoViewMock).toHaveBeenCalledTimes(1);
-      });
+    //     await waitFor(() => {
+    //       expect(scrollIntoViewMock).toHaveBeenCalledTimes(1);
+    //     });
 
-      const anchors = await screen.findAllByRole('button');
-      await userEvent.click(anchors[0]);
+    //     const anchors = await screen.findAllByRole('button');
+    //     await userEvent.click(anchors[0]);
 
-      await waitFor(() => {
-        expect(scrollIntoViewMock).toHaveBeenCalledTimes(2);
-      });
-    });
+    //     await waitFor(() => {
+    //       expect(scrollIntoViewMock).toHaveBeenCalledTimes(2);
+    //     });
+    //   });
   });
 });

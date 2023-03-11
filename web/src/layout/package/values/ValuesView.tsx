@@ -16,7 +16,7 @@ interface Props {
   lines?: Lines;
   normalizedName: string;
   updateUrl: (q: ValuesQuery) => void;
-  visibleValuesPath?: string;
+  visibleValuesPath?: string | null;
   searchUrlReferer?: SearchFiltersURL;
   fromStarredPage?: boolean;
 }

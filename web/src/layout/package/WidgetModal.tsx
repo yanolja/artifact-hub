@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { FiMoon, FiSun } from 'react-icons/fi';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 
@@ -36,7 +36,7 @@ const THEMES: WidgetTheme[] = [
 ];
 
 const WidgetModal = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const whiteLabel = isWhiteLabel();
   const siteName = getMetaTag('siteName');
   const [theme, setTheme] = useState<string>(DEFAULT_THEME);
@@ -71,9 +71,9 @@ const WidgetModal = (props: Props) => {
   const onCloseModal = () => {
     props.setOpenStatus(false);
     resetValues();
-    history.replace({
-      search: '',
+    navigate('', {
       state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
+      replace: true,
     });
   };
 
@@ -85,9 +85,9 @@ const WidgetModal = (props: Props) => {
 
   useEffect(() => {
     if (props.visibleWidget) {
-      history.replace({
-        search: '?modal=widget',
+      navigate('?modal=widget', {
         state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
+        replace: true,
       });
     }
   }, [props.visibleWidget]); /* eslint-disable-line react-hooks/exhaustive-deps */

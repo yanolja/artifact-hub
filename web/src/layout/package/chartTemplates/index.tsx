@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { GoCheck } from 'react-icons/go';
 import { ImInsertTemplate } from 'react-icons/im';
 import { MdClose } from 'react-icons/md';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import API from '../../../api';
 import useOutsideClick from '../../../hooks/useOutsideClick';
@@ -33,9 +33,9 @@ interface Props {
   sortedVersions: VersionData[];
   repoKind: RepositoryKind;
   visibleChartTemplates: boolean;
-  visibleTemplate?: string;
-  visibleLine?: string;
-  compareVersionTo?: string;
+  visibleTemplate?: string | null;
+  visibleLine?: string | null;
+  compareVersionTo?: string | null;
   searchUrlReferer?: SearchFiltersURL;
   fromStarredPage?: boolean;
 }
@@ -71,7 +71,7 @@ const readLines = (template: ChartTemplate): DefinedTemplatesList => {
 };
 
 const ChartTemplatesModal = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [openStatus, setOpenStatus] = useState<boolean>(false);
   const [templates, setTemplates] = useState<ChartTemplate[] | null | undefined>();
   const [templatesInHelpers, setTemplatesInHelpers] = useState<DefinedTemplatesList>({});
@@ -87,24 +87,29 @@ const ChartTemplatesModal = (props: Props) => {
   useOutsideClick([ref], visibleDropdown, () => setVisibleDropdown(false));
 
   const cleanUrl = () => {
-    history.push({
-      search: '',
+    navigate('', {
       state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
     });
   };
 
   const updateUrl = (q: TemplatesQuery) => {
-    history.push({
-      search: `?modal=template${q.template ? `&template=${q.template}` : ''}${q.line ? `&line=${q.line}` : ''}${
-        q.compareTo ? `&compare-to=${q.compareTo}` : ''
-      }`,
-      state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
-    });
+    navigate(
+      {
+        search: `?modal=template${q.template ? `&template=${q.template}` : ''}${q.line ? `&line=${q.line}` : ''}${
+          q.compareTo ? `&compare-to=${q.compareTo}` : ''
+        }`,
+      },
+      {
+        state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
+      }
+    );
   };
 
   const onVersionChange = (version: string) => {
     setComparedVersion(version);
-    updateUrl({ template: props.visibleTemplate, compareTo: version });
+    if (props.visibleTemplate) {
+      updateUrl({ template: props.visibleTemplate, compareTo: version });
+    }
     setVisibleDropdown(false);
     setEnabledDiff(true);
   };
@@ -192,8 +197,7 @@ const ChartTemplatesModal = (props: Props) => {
     setOpenStatus(false);
     setEnabledDiff(false);
     setComparedVersion('');
-    history.push({
-      search: '',
+    navigate('', {
       state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
     });
   };

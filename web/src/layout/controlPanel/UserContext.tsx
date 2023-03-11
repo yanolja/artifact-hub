@@ -24,6 +24,7 @@ const UserContext = () => {
   useOutsideClick([ref], openStatus, () => setOpenStatus(false));
 
   const handleChange = (value: string | Organization): void => {
+    console.log(value);
     if (isString(value)) {
       authorizer.updateCtx();
       dispatch(unselectOrg());
