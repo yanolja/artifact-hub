@@ -1,12 +1,13 @@
 import { isNull } from 'lodash';
 import { useState } from 'react';
-import { matchRoutes, Outlet, useLocation } from 'react-router-dom';
+import { matchRoutes, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { AppCtxProvider } from '../context/AppCtx';
 import useOnLocationChange from '../hooks/useOnLocationChange';
 import useScrollRestorationFix from '../hooks/useScrollRestorationFix';
 import { HOME_ROUTES, PKG_DETAIL_PATH } from '../utils/data';
 import getMetaTag from '../utils/getMetaTag';
+import { history } from '../utils/history';
 import updateMetaIndex from '../utils/updateMetaIndex';
 import notificationsDispatcher from '../utils/userNotificationsDispatcher';
 import AlertController from './common/AlertController';
@@ -17,6 +18,12 @@ import Navbar from './navigation/Navbar';
 
 const Layout = () => {
   const location = useLocation();
+
+  // init custom history object to allow navigation from
+  // anywhere in the react app (inside or outside components)
+  history.navigate = useNavigate();
+  history.location = location;
+
   const analyticsConfig: string | null = getMetaTag('gaTrackingID');
   let analytics: any = null;
   const [isSearching, setIsSearching] = useState<boolean>(false);

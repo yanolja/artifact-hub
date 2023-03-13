@@ -1,16 +1,8 @@
 import './App.css';
 import '../themes/default.scss';
 
-import {
-  BrowserRouter,
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-  RouterProvider,
-  Routes,
-} from 'react-router-dom';
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
 
-import { AppCtxProvider } from '../context/AppCtx';
 import { HOME_ROUTES } from '../utils/data';
 import Layout from '.';
 import ControlPanelView from './controlPanel';

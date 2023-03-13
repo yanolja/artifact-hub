@@ -73,7 +73,7 @@ const ControlPanelView = () => {
         userAlias !== '' &&
         !isUndefined(ctx.prefs.controlPanel.selectedOrg)
       ) {
-        dispatch(unselectOrg(navigate));
+        dispatch(unselectOrg());
         context = 'user';
       } else if (
         !isNull(organizationName) &&

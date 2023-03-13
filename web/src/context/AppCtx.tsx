@@ -1,13 +1,13 @@
 import { isNull } from 'lodash';
 import isUndefined from 'lodash/isUndefined';
 import { createContext, Dispatch, useContext, useEffect, useReducer, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import API from '../api';
 import useSystemThemeMode from '../hooks/useSystemThemeMode';
 import { Prefs, Profile, ThemePrefs, UserFullName } from '../types';
 import cleanLoginUrlParams from '../utils/cleanLoginUrlParams';
 import detectActiveThemeMode from '../utils/detectActiveThemeMode';
+import { history } from '../utils/history';
 import isControlPanelSectionAvailable from '../utils/isControlPanelSectionAvailable';
 import lsPreferences from '../utils/localStoragePreferences';
 import lsStorage from '../utils/localStoragePreferences';
@@ -83,20 +83,20 @@ export function addNewDisplayedNotification(id: string) {
   return { type: 'addNewDisplayedNotification', id };
 }
 
-export async function refreshUserProfile(dispatch: Dispatch<any>, navigate: any, redirectUrl?: string | null) {
+export async function refreshUserProfile(dispatch: Dispatch<any>, redirectUrl?: string | null) {
   try {
     const profile: Profile = await API.getUserProfile();
     dispatch({ type: 'signIn', profile });
     const currentUrl = `${window.location.pathname}${
       window.location.search !== '' ? `?${cleanLoginUrlParams(window.location.search)}` : ''
     }`;
-    if (redirectUrl) {
+    if (redirectUrl && history.navigate) {
       if (redirectUrl === currentUrl) {
-        navigate(redirectUrl, { replace: true });
+        history.navigate(redirectUrl, { replace: true });
       } else {
         const redirection = redirectUrl.split('?');
         // Redirect to correct route when necessary
-        navigate({
+        history.navigate({
           pathname: redirection[0],
           search: !isUndefined(redirection[1]) ? `?${redirection[1]}` : '',
         });
@@ -104,10 +104,10 @@ export async function refreshUserProfile(dispatch: Dispatch<any>, navigate: any,
     }
   } catch (err: any) {
     dispatch({ type: 'signOut' });
-    if (err.message === 'invalid session') {
-      navigate(
-        `${window.location.pathname}${
-          window.location.search === '' ? '?' : `${window.location.search}&`
+    if (err.message === 'invalid session' && history.navigate && history.location) {
+      history.navigate(
+        `${history.location.pathname}${
+          history.location.search === '' ? '?' : `${history.location.search}&`
         }modal=login&redirect=${encodeURIComponent(`${window.location.pathname}${window.location.search}`)}`
       );
     }
@@ -115,10 +115,10 @@ export async function refreshUserProfile(dispatch: Dispatch<any>, navigate: any,
 }
 
 function redirectToControlPanel(context: 'user' | 'org') {
-  if (window.location.pathname.startsWith('/control-panel')) {
-    const sections = window.location.pathname.split('/');
-    if (!isControlPanelSectionAvailable(context, sections[2], sections[3])) {
-      window.location.href = '/control-panel/repositories';
+  if (history.location && history.location.pathname.startsWith('/control-panel')) {
+    const sections = history.location.pathname.split('/');
+    if (!isControlPanelSectionAvailable(context, sections[2], sections[3]) && history.navigate) {
+      history.navigate('/control-panel/repositories');
     }
   }
 }
@@ -288,7 +288,6 @@ export function appReducer(state: AppState, action: Action) {
 }
 
 function AppCtxProvider(props: Props) {
-  const navigate = useNavigate();
   const activeProfilePrefs = lsPreferences.getActiveProfile();
   const [ctx, dispatch] = useReducer(appReducer, {
     user: undefined,
@@ -304,7 +303,7 @@ function AppCtxProvider(props: Props) {
     themeBuilder.init();
     updateActiveStyleSheet(theme);
     setActiveInitialTheme(theme);
-    refreshUserProfile(dispatch, navigate);
+    refreshUserProfile(dispatch);
   }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
 
   useSystemThemeMode(ctx.prefs.theme.configured === 'automatic', dispatch);

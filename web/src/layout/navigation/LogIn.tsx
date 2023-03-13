@@ -96,7 +96,7 @@ const LogIn = (props: Props) => {
   const onLoginSuccess = () => {
     setIsApprovingSession(false);
     setIsLoading({ status: false });
-    dispatch(refreshUserProfile(dispatch, navigate, props.redirect));
+    dispatch(refreshUserProfile(dispatch, props.redirect));
     props.setOpenLogIn(false);
   };
 
