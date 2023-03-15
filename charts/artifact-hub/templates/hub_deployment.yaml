@@ -36,6 +36,18 @@ spec:
       {{- if .Release.IsInstall }}
       serviceAccountName: {{ include "chart.serviceAccountName" . }}
       {{- end }}
+      {{- with .Values.hub.deploy.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.hub.deploy.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.hub.deploy.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       initContainers:
         - {{- include "chart.checkDbIsReadyInitContainer" . | nindent 10 }}
         {{- if .Release.IsInstall }}
