@@ -21,15 +21,15 @@ spec:
         {{- end }}
         {{- with .Values.tracker.cronjob.nodeSelector }}
           nodeSelector:
-            {{- toYaml . | nindent 8 }}
-          {{- end }}
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
         {{- with .Values.tracker.cronjob.affinity }}
           affinity:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 12 }}
         {{- end }}
         {{- with .Values.tracker.cronjob.tolerations }}
           tolerations:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 12 }}
         {{- end }}
           restartPolicy: Never
           initContainers:
