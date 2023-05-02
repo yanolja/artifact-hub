@@ -20,6 +20,18 @@ spec:
           imagePullSecrets:
             {{- toYaml . | nindent 12 }}
         {{- end }}
+        {{- with .Values.scanner.cronjob.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
+        {{- with .Values.scanner.cronjob.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
+        {{- with .Values.scanner.cronjob.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
           restartPolicy: Never
           initContainers:
             - {{- include "chart.checkDbIsReadyInitContainer" . | nindent 14 }}

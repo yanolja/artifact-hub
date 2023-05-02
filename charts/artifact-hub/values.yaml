@@ -96,6 +96,9 @@ dbMigrator:
     #   requests:
     #     cpu: 100m
     #     memory: 128Mi
+    nodeSelector: {}
+    affinity: {}
+    tolerations: []
   # Load demo user and sample repositories
   loadSampleData: true
   # Directory path where the configuration files should be mounted
@@ -141,6 +144,9 @@ hub:
     #   requests:
     #     cpu: 100m
     #     memory: 128Mi
+    nodeSelector: {}
+    affinity: {}
+    tolerations: []
     initContainers:
       checkDbMigrator:
         image:
@@ -304,6 +310,9 @@ scanner:
     #   requests:
     #     cpu: 100m
     #     memory: 128Mi
+    nodeSelector: {}
+    affinity: {}
+    tolerations: []
     # Optionally specify extra list of additional volumes for the scanner cronjob
     extraVolumes: []
     # Optionally specify extra list of additional volume mounts for the scanner cronjob
@@ -333,6 +342,9 @@ tracker:
     #   requests:
     #     cpu: 100m
     #     memory: 128Mi
+    nodeSelector: {}
+    affinity: {}
+    tolerations: []
     # Optionally specify extra list of additional volumes for the tracker cronjob
     extraVolumes: []
     # Optionally specify extra list of additional volume mounts for the tracker cronjob
@@ -368,6 +380,9 @@ trivy:
     #   requests:
     #     cpu: 100m
     #     memory: 128Mi
+    nodeSelector: {}
+    affinity: {}
+    tolerations: []
     # Optionally specify extra list of additional volumes for the trivy deployment
     extraVolumes: []
     # Optionally specify extra list of additional volume mounts for the trivy deployment
