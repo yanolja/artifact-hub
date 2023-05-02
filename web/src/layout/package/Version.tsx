@@ -1,8 +1,8 @@
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { Repository, SearchFiltersURL } from '../../types';
+import { Repository } from '../../types';
 import buildPackageURL from '../../utils/buildPackageURL';
 import Loading from '../common/Loading';
 import styles from './Version.module.css';
@@ -16,21 +16,22 @@ interface Props {
   ts: number;
   normalizedName: string;
   repository: Repository;
-  searchUrlReferer?: SearchFiltersURL;
-  fromStarredPage?: boolean;
 }
 
 const Version = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
 
   const openPackagePage = () => {
     setIsLoading(true);
 
-    history.push({
-      pathname: buildPackageURL(props.normalizedName, props.repository, props.version, true),
-      state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
-    });
+    navigate(
+      {
+        pathname: buildPackageURL(props.normalizedName, props.repository, props.version, true),
+      },
+      { state: location.state }
+    );
   };
 
   useEffect(() => {
@@ -52,7 +53,9 @@ const Version = (props: Props) => {
                 return (
                   <div key={`v_channel_${channel}`} className="d-flex flex-row align-items-center">
                     <div className={`${styles.badgeDecorator} position-relative mx-1`} />
-                    <span className={`badge my-1 text-truncate border ${styles.badge} ${styles.isHighlighted}`}>
+                    <span
+                      className={`badge my-1 text-truncate border border-1 ${styles.badge} ${styles.isHighlighted}`}
+                    >
                       <small className="text-uppercase me-1">Channel:</small>
                       {channel}
                     </span>
@@ -65,14 +68,14 @@ const Version = (props: Props) => {
           {props.prerelease && (
             <div className="d-flex flex-row align-items-center">
               <div className={`${styles.badgeDecorator} position-relative mx-1`} />
-              <span className={`badge my-1 border ${styles.badge}`}>Pre-release</span>
+              <span className={`badge my-1 border border-1 ${styles.badge}`}>Pre-release</span>
             </div>
           )}
 
           {props.containsSecurityUpdates && (
             <div className="d-flex flex-row align-items-center">
               <div className={`${styles.badgeDecorator} position-relative mx-1`} />
-              <span className={`badge my-1 border ${styles.badge}`}>Contains security updates</span>
+              <span className={`badge my-1 border border-1 ${styles.badge}`}>Contains security updates</span>
             </div>
           )}
         </div>

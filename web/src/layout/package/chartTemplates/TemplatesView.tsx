@@ -14,8 +14,8 @@ interface Props {
   templatesInHelpers: DefinedTemplatesList;
   values?: any;
   normalizedName: string;
-  visibleTemplate?: string;
-  visibleLine?: string;
+  visibleTemplate?: string | null;
+  visibleLine?: string | null;
   updateUrl: (q: TemplatesQuery) => void;
 }
 
@@ -96,7 +96,7 @@ const TemplatesView = (props: Props) => {
       </div>
 
       <div className="col-9 ps-3 h-100">
-        <div className={`position-relative h-100 mh-100 border ${styles.templateWrapper}`}>
+        <div className={`position-relative h-100 mh-100 border border-1 ${styles.templateWrapper}`}>
           {((isChangingTemplate && activeTemplate) || isUndefined(activeTemplate)) && <Loading />}
           {activeTemplate && (
             <BlockCodeButtons

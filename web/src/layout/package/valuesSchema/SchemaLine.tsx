@@ -20,7 +20,7 @@ interface Props {
   isRequired: boolean;
   className?: string;
   path?: string;
-  activePath?: string;
+  activePath?: string | null;
   onActivePathChange: (path?: string) => void;
   saveSelectedOption: (path: string, index: number) => void;
   hasDecorator?: boolean;
@@ -176,7 +176,7 @@ const SchemaLine = (props: Props) => {
   }
 
   const currentPath = getJMESPathForValuesSchema(isArrayParent ? `${props.name}[0]` : props.name, props.path);
-  const isExpanded = !isUndefined(props.activePath) && props.activePath === currentPath;
+  const isExpanded = !isUndefined(props.activePath) && !isNull(props.activePath) && props.activePath === currentPath;
 
   const onChangeSelectedValue = (newValue: ActiveJSONSchemaValue) => {
     setValue(newValue);
@@ -188,7 +188,7 @@ const SchemaLine = (props: Props) => {
       <div className={`row position-relative ${styles.wrapper}`} data-testid="schemaLine">
         <div
           data-testid="lineContent"
-          className={`col-7 border-start border-end position-relative py-1 user-select-none ${styles.content} ${props.className}`}
+          className={`col-7 border-start border-end border-1 position-relative py-1 user-select-none ${styles.content} ${props.className}`}
           onClick={() => props.onActivePathChange(!isExpanded ? currentPath : undefined)}
           role="button"
         >

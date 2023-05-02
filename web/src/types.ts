@@ -20,6 +20,7 @@ export enum RepositoryKind {
   KnativeClientPlugin,
   Backstage,
   ArgoTemplate,
+  KubeArmor,
 }
 
 export enum PackageCategory {
@@ -230,7 +231,7 @@ export interface RecommendedPackage {
 }
 
 export interface PackageData {
-  policies?: OPAPolicies;
+  policies?: Policies;
   examples?: GatekeeperExample[] | { [key: string]: string };
   rules?: { Raw: string; Name: string }[] | FalcoRules;
   dependencies?: Dependency[];
@@ -274,7 +275,7 @@ export interface GatekeeperCase {
   path: string;
   content: string;
 }
-export interface OPAPolicies {
+export interface Policies {
   [key: string]: string;
 }
 
@@ -847,4 +848,15 @@ export interface Banner {
     'light-theme': string;
     'dark-theme': string;
   };
+}
+
+export interface OutletContext {
+  isSearching: boolean;
+  setIsSearching: (value: boolean) => void;
+  isLoading: boolean;
+  setIsLoading: (value: boolean) => void;
+  scrollPosition?: number;
+  setScrollPosition: (value?: number) => void;
+  viewedPackage?: string;
+  setViewedPackage: (value?: string) => void;
 }

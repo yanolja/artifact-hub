@@ -2,7 +2,7 @@ import isNull from 'lodash/isNull';
 import isUndefined from 'lodash/isUndefined';
 import { useEffect, useState } from 'react';
 import { MdAdd, MdAddCircle } from 'react-icons/md';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import API from '../../../../../api';
 import { APIKey, ErrorKind } from '../../../../../types';
@@ -14,7 +14,7 @@ import APIKeyCard from './Card';
 import APIKeyModal from './Modal';
 
 interface Props {
-  activePage?: string;
+  activePage: string | null;
   onAuthError: () => void;
 }
 
@@ -26,7 +26,7 @@ interface ModalStatus {
 const DEFAULT_LIMIT = 10;
 
 const APIKeysSection = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [apiKeysList, setApiKeysList] = useState<APIKey[] | undefined>(undefined);
   const [apiError, setApiError] = useState<string | JSX.Element | null>(null);
@@ -48,9 +48,7 @@ const APIKeysSection = (props: Props) => {
   };
 
   const updatePageNumber = () => {
-    history.replace({
-      search: `?page=${activePage}`,
-    });
+    navigate(`?page=${activePage}`, { replace: true });
   };
 
   async function getAPIKeys() {
@@ -97,7 +95,7 @@ const APIKeysSection = (props: Props) => {
 
       <main role="main" className="p-0">
         <div className="flex-grow-1">
-          <div className="d-flex flex-row align-items-center justify-content-between pb-2 border-bottom">
+          <div className="d-flex flex-row align-items-center justify-content-between pb-2 border-bottom border-1">
             <div className={`h3 pb-0 ${styles.title}`}>API keys</div>
             <div>
               <button

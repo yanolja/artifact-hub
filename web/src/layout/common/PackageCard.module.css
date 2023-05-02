@@ -91,7 +91,7 @@
 }
 
 .userInfo {
-  margin-top: -2px;
+  margin-top: -1px;
 }
 
 .userIcon {
@@ -109,6 +109,12 @@
 
 .signedIcon {
   margin-left: 3px;
+}
+
+.starBadge {
+  margin-top: 1px;
+  height: 19px;
+  line-height: 0.5rem;
 }
 
 @media (hover: hover) {

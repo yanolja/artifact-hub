@@ -2,7 +2,7 @@ import classnames from 'classnames';
 import isUndefined from 'lodash/isUndefined';
 import { useEffect, useRef, useState } from 'react';
 import { MdBusiness } from 'react-icons/md';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import API from '../../api';
 import useOutsideClick from '../../hooks/useOutsideClick';
@@ -25,7 +25,7 @@ interface Props {
 const FETCH_DELAY = 1 * 100; // 100ms
 
 const OrganizationInfo = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const ref = useRef(null);
   const [organization, setOrganization] = useState<Organization | null | undefined>(undefined);
   const [openStatus, setOpenStatus] = useState(false);
@@ -138,17 +138,11 @@ const OrganizationInfo = (props: Props) => {
       </div>
 
       <div className="d-flex flex-row align-items-baseline text-truncate">
-        {props.visibleLegend && (
-          <div className={`d-flex flex-row align-items-baseline me-1 text-dark position-relative ${styles.icon}`}>
-            <MdBusiness />
-          </div>
-        )}
-
         <button
           className={`p-0 border-0 text-muted text-truncate flex-grow-1 bg-transparent position-relative ${styles.link} ${props.btnClassName}`}
           onClick={(e) => {
             e.preventDefault();
-            history.push({
+            navigate({
               pathname: '/packages/search',
               search: prepareQueryString({
                 pageNumber: 1,
@@ -174,12 +168,19 @@ const OrganizationInfo = (props: Props) => {
           aria-hidden="true"
           tabIndex={-1}
         >
-          <div
-            className={classnames({
-              'text-truncate': isUndefined(props.multiLine) || !props.multiLine,
-            })}
-          >
-            {props.organizationDisplayName || props.organizationName}
+          <div className="d-flex flex-row align-items-baseline">
+            {props.visibleLegend && (
+              <div className={`d-flex flex-row align-items-baseline me-1 text-dark position-relative ${styles.icon}`}>
+                <MdBusiness />
+              </div>
+            )}
+            <div
+              className={classnames({
+                'text-truncate': isUndefined(props.multiLine) || !props.multiLine,
+              })}
+            >
+              {props.organizationDisplayName || props.organizationName}
+            </div>
           </div>
         </button>
       </div>

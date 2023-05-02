@@ -2,7 +2,7 @@ import isNull from 'lodash/isNull';
 import isUndefined from 'lodash/isUndefined';
 import { useEffect, useState } from 'react';
 import { MdAdd, MdAddCircle } from 'react-icons/md';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import API from '../../../api';
 import { ErrorKind, Organization } from '../../../types';
@@ -19,14 +19,14 @@ interface ModalStatus {
 }
 
 interface Props {
-  activePage?: string;
+  activePage: string | null;
   onAuthError: () => void;
 }
 
 const DEFAULT_LIMIT = 10;
 
 const OrganizationsSection = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [modalStatus, setModalStatus] = useState<ModalStatus>({
     open: false,
@@ -49,9 +49,7 @@ const OrganizationsSection = (props: Props) => {
   };
 
   const updatePageNumber = () => {
-    history.replace({
-      search: `?page=${activePage}`,
-    });
+    navigate(`?page=${activePage}`, { replace: true });
   };
 
   async function fetchOrganizations() {
@@ -99,7 +97,7 @@ const OrganizationsSection = (props: Props) => {
     >
       <div className="flex-grow-1 w-100">
         <div>
-          <div className="d-flex flex-row align-items-center justify-content-between pb-2 border-bottom">
+          <div className="d-flex flex-row align-items-center justify-content-between pb-2 border-bottom border-1">
             <div className={`h3 pb-0 ${styles.title}`}>Organizations</div>
 
             <div>

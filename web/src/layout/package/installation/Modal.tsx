@@ -2,9 +2,9 @@ import classnames from 'classnames';
 import { isNull, isUndefined } from 'lodash';
 import { useEffect, useState } from 'react';
 import { FiDownload } from 'react-icons/fi';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { Package, SearchFiltersURL } from '../../../types';
+import { Package } from '../../../types';
 import getInstallMethods, {
   InstallMethod,
   InstallMethodKind,
@@ -19,6 +19,7 @@ import HelmInstall from './HelmInstall';
 import HelmOCIInstall from './HelmOCIInstall';
 import HelmPluginInstall from './HelmPluginInstall';
 import KrewInstall from './KrewInstall';
+import KubeArmorInstall from './KubeArmorInstall';
 import KubectlGatekeeperInstall from './KubectlGatekeeperInstall';
 import KubewardenInstall from './KubewardenInstall';
 import KustomizeGatekeeperInstall from './KustomizeGatekeeperInstall';
@@ -30,12 +31,11 @@ import TektonInstall from './TektonInstall';
 interface Props {
   package?: Package | null;
   visibleInstallationModal: boolean;
-  searchUrlReferer?: SearchFiltersURL;
-  fromStarredPage?: boolean;
 }
 
 const InstallationModal = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [openStatus, setOpenStatus] = useState<boolean>(false);
   const [installMethods, setInstallMethods] = useState<InstallMethodOutput | null>(null); // undefined ???
   const isDisabled = !isNull(installMethods) && !isUndefined(installMethods.errorMessage);
@@ -43,9 +43,9 @@ const InstallationModal = (props: Props) => {
   const onOpenModal = () => {
     if (!isNull(installMethods) && installMethods.methods.length > 0) {
       setOpenStatus(true);
-      history.replace({
-        search: '?modal=install',
-        state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
+      navigate('?modal=install', {
+        state: location.state,
+        replace: true,
       });
     } else {
       onCloseModal();
@@ -54,9 +54,9 @@ const InstallationModal = (props: Props) => {
 
   const onCloseModal = () => {
     setOpenStatus(false);
-    history.replace({
-      search: '',
-      state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
+    navigate('', {
+      state: location.state,
+      replace: true,
     });
   };
 
@@ -214,6 +214,14 @@ const InstallationModal = (props: Props) => {
                               <KubectlGatekeeperInstall
                                 repository={method.props.repository!}
                                 examples={method.props.examples}
+                                relativePath={method.props.relativePath!}
+                              />
+                            );
+                          case InstallMethodKind.KubeArmor:
+                            return (
+                              <KubeArmorInstall
+                                repository={method.props.repository!}
+                                policies={method.props.policies}
                                 relativePath={method.props.relativePath!}
                               />
                             );

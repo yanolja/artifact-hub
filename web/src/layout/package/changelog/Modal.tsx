@@ -5,10 +5,10 @@ import { useEffect, useRef, useState } from 'react';
 import { CgFileDocument } from 'react-icons/cg';
 import { FaMarkdown } from 'react-icons/fa';
 import { MdClose } from 'react-icons/md';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import API from '../../../api';
-import { ChangeLog, Repository, RepositoryKind, SearchFiltersURL } from '../../../types';
+import { ChangeLog, Repository, RepositoryKind } from '../../../types';
 import alertDispatcher from '../../../utils/alertDispatcher';
 import { getRepoKindName } from '../../../utils/repoKind';
 import ElementWithTooltip from '../../common/ElementWithTooltip';
@@ -23,13 +23,12 @@ interface Props {
   hasChangelog: boolean;
   visibleChangelog: boolean;
   currentVersion?: string;
-  visibleVersion?: string;
-  searchUrlReferer?: SearchFiltersURL;
-  fromStarredPage?: boolean;
+  visibleVersion?: string | null;
 }
 
 const ChangelogModal = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const btnsWrapper = useRef<HTMLDivElement>(null);
   const [openStatus, setOpenStatus] = useState<boolean>(false);
   const [changelog, setChangelog] = useState<ChangeLog[] | null | undefined>();
@@ -37,14 +36,15 @@ const ChangelogModal = (props: Props) => {
   const [currentPkgId, setCurrentPkgId] = useState<string | undefined>(undefined);
   const [activeVersionIndex, setActiveVersionIndex] = useState<number | undefined>(undefined);
   const [isGettingMd, setIsGettingMd] = useState<boolean>(false);
+  const [initialState] = useState(location.state);
 
   const updateVersionInQueryString = (version?: string, index?: number) => {
     if (!isUndefined(index)) {
       updateActiveVersion(index);
     }
-    history.replace({
-      search: `?modal=changelog${version ? `&version=${version}` : ''}`,
-      state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
+    navigate(`?modal=changelog${version ? `&version=${version}` : ''}`, {
+      state: initialState,
+      replace: true,
     });
   };
 
@@ -125,9 +125,9 @@ const ChangelogModal = (props: Props) => {
     if (props.hasChangelog) {
       getChangelog();
     } else {
-      history.replace({
-        search: '',
-        state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
+      navigate('', {
+        state: initialState,
+        replace: true,
       });
     }
   };
@@ -139,9 +139,9 @@ const ChangelogModal = (props: Props) => {
     setIsLoading(false);
     setChangelog(undefined);
     if (replaceUrl) {
-      history.replace({
-        search: '',
-        state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
+      navigate('', {
+        state: initialState,
+        replace: true,
       });
     }
   };
@@ -268,7 +268,7 @@ const ChangelogModal = (props: Props) => {
             <div className="d-flex flex-row h-100">
               <div className="h-100 d-none d-lg-flex">
                 <div
-                  className={`d-flex flex-column me-4 border-end overflow-auto ${styles.versionsIndexWrapper}`}
+                  className={`d-flex flex-column me-4 border-end border-1 overflow-auto ${styles.versionsIndexWrapper}`}
                   ref={btnsWrapper}
                 >
                   {changelog.map((item: ChangeLog, index: number) => {
@@ -277,7 +277,7 @@ const ChangelogModal = (props: Props) => {
                       <div
                         data-testid="versionBtnWrapper"
                         className={classnames(
-                          'pe-4 ps-2 position-relative border-bottom',
+                          'pe-4 ps-2 position-relative border-bottom border-1',
                           styles.versionBtnWrapper,
                           {
                             [styles.activeVersionBtnWrapper]: index === activeVersionIndex,
@@ -314,8 +314,7 @@ const ChangelogModal = (props: Props) => {
                 activeVersionIndex={activeVersionIndex || 0}
                 setActiveVersionIndex={setActiveVersionIndex}
                 repository={props.repository}
-                searchUrlReferer={props.searchUrlReferer}
-                fromStarredPage={props.fromStarredPage}
+                state={initialState}
               />
             </div>
           </div>

@@ -10,7 +10,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Setup Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version: "1.20"
       - name: Install TensorFlow C library
@@ -31,7 +31,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
       - name: Lint OpenAPI specs
-        uses: github/super-linter@v4
+        uses: github/super-linter@v5
         env:
           VALIDATE_ALL_CODEBASE: true
           VALIDATE_OPENAPI: true
@@ -94,7 +94,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Setup Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version: "1.20"
       - name: Cache Go modules
@@ -173,7 +173,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Setup Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version: "1.20"
       - name: Cache Go modules

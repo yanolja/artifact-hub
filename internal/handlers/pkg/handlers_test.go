@@ -534,7 +534,7 @@ func TestGetChartValues(t *testing.T) {
 		hw.pm.On("Get", r.Context(), getPkgInput).Return(p1, nil)
 		tgzReq, _ := http.NewRequest("GET", p1ContentURL, nil)
 		tgzReq = tgzReq.WithContext(r.Context())
-		tgzReq.Header.Set("Accept-Encoding", "*")
+		tgzReq.Header.Set("Accept-Encoding", "identity")
 		f, _ := os.Open("testdata/pkg2-1.0.0.tgz")
 		hw.hc.On("Do", tgzReq).Return(&http.Response{
 			Body:       f,
@@ -558,7 +558,7 @@ func TestGetChartValues(t *testing.T) {
 		hw.pm.On("Get", r.Context(), getPkgInput).Return(p1, nil)
 		tgzReq, _ := http.NewRequest("GET", p1ContentURL, nil)
 		tgzReq = tgzReq.WithContext(r.Context())
-		tgzReq.Header.Set("Accept-Encoding", "*")
+		tgzReq.Header.Set("Accept-Encoding", "identity")
 		f, _ := os.Open("testdata/pkg1-1.0.0.tgz")
 		hw.hc.On("Do", tgzReq).Return(&http.Response{
 			Body:       f,
@@ -624,7 +624,7 @@ func TestGetChartTemplates(t *testing.T) {
 		hw.pm.On("Get", r.Context(), getPkgInput).Return(p1, nil)
 		tgzReq, _ := http.NewRequest("GET", p1ContentURL, nil)
 		tgzReq = tgzReq.WithContext(r.Context())
-		tgzReq.Header.Set("Accept-Encoding", "*")
+		tgzReq.Header.Set("Accept-Encoding", "identity")
 		f, _ := os.Open("testdata/pkg1-1.0.0.tgz")
 		hw.hc.On("Do", tgzReq).Return(&http.Response{
 			Body:       f,
@@ -1762,7 +1762,7 @@ func TestGetChartArchive(t *testing.T) {
 				hw.pm.On("Get", ctx, getPkgInput).Return(p1, nil)
 				tgzReq, _ := http.NewRequest("GET", p1ContentURL, nil)
 				tgzReq = tgzReq.WithContext(ctx)
-				tgzReq.Header.Set("Accept-Encoding", "*")
+				tgzReq.Header.Set("Accept-Encoding", "identity")
 				hw.hc.On("Do", tgzReq).Return(tc.resp, tc.err)
 				chrt, err := hw.h.getChartArchive(ctx, packageID, version)
 
@@ -1795,7 +1795,7 @@ func TestGetChartArchive(t *testing.T) {
 		hw.pm.On("Get", ctx, getPkgInput).Return(p1, nil)
 		tgzReq, _ := http.NewRequest("GET", p1ContentURL, nil)
 		tgzReq = tgzReq.WithContext(ctx)
-		tgzReq.Header.Set("Accept-Encoding", "*")
+		tgzReq.Header.Set("Accept-Encoding", "identity")
 		hw.hc.On("Do", tgzReq).Return(&http.Response{
 			Body:       io.NopCloser(strings.NewReader("")),
 			StatusCode: http.StatusOK,
@@ -1814,7 +1814,7 @@ func TestGetChartArchive(t *testing.T) {
 		hw.pm.On("Get", ctx, getPkgInput).Return(p1, nil)
 		tgzReq, _ := http.NewRequest("GET", p1ContentURL, nil)
 		tgzReq = tgzReq.WithContext(ctx)
-		tgzReq.Header.Set("Accept-Encoding", "*")
+		tgzReq.Header.Set("Accept-Encoding", "identity")
 		f, _ := os.Open("testdata/pkg1-1.0.0.tgz")
 		hw.hc.On("Do", tgzReq).Return(&http.Response{
 			Body:       f,
@@ -1839,7 +1839,7 @@ func TestGetChartArchive(t *testing.T) {
 		tgzReq, _ := http.NewRequest("GET", p2ContentURL, nil)
 		tgzReq = tgzReq.WithContext(ctx)
 		tgzReq.SetBasicAuth("user", "pass")
-		tgzReq.Header.Set("Accept-Encoding", "*")
+		tgzReq.Header.Set("Accept-Encoding", "identity")
 		f, _ := os.Open("testdata/pkg1-1.0.0.tgz")
 		hw.hc.On("Do", tgzReq).Return(&http.Response{
 			Body:       f,
@@ -2095,6 +2095,17 @@ func TestBuildURL(t *testing.T) {
 			},
 			"2.0.0",
 			baseURL + "/packages/argo-template/repo1/pkg1/2.0.0",
+		},
+		{
+			&hub.Package{
+				NormalizedName: "pkg1",
+				Repository: &hub.Repository{
+					Kind: hub.KubeArmor,
+					Name: "repo1",
+				},
+			},
+			"2.0.0",
+			baseURL + "/packages/kubearmor/repo1/pkg1/2.0.0",
 		},
 	}
 	for _, tc := range testCases {

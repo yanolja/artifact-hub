@@ -3,7 +3,7 @@ import isUndefined from 'lodash/isUndefined';
 import moment from 'moment';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { FaUser } from 'react-icons/fa';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { Package, RepositoryKind, SearchFiltersURL } from '../../types';
 import buildPackageURL from '../../utils/buildPackageURL';
@@ -39,7 +39,7 @@ interface Props {
 }
 
 const PackageCard = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const infoSection = useRef<HTMLDivElement>(null);
   const ownerInfo = useRef<HTMLDivElement>(null);
   const repoInfo = useRef<HTMLDivElement>(null);
@@ -58,7 +58,7 @@ const PackageCard = (props: Props) => {
 
   const starsAndKindInfo = (
     <div className={`align-self-start d-flex align-items-center text-uppercase ms-auto ${styles.kind}`}>
-      <StarBadge className="me-2" starsNumber={props.package.stars} />
+      <StarBadge className={`me-2 ${styles.starBadge}`} starsNumber={props.package.stars} />
       <RepositoryIconLabel
         btnClassName={`position-relative ${styles.repoLabel}`}
         kind={props.package.repository.kind}
@@ -132,8 +132,8 @@ const PackageCard = (props: Props) => {
           }}
           to={{
             pathname: buildPackageURL(props.package.normalizedName, props.package.repository, props.package.version!),
-            state: { searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage },
           }}
+          state={{ searchUrlReferer: props.searchUrlReferer, fromStarredPage: props.fromStarredPage }}
         >
           <div className={`card-body d-flex flex-column h-100 ${styles.body}`}>
             <div className="d-flex align-items-start justify-content-between mw-100">
@@ -197,17 +197,13 @@ const PackageCard = (props: Props) => {
 
                         {props.package.repository.userAlias && (
                           <div className={`d-flex flex-row align-items-baseline ${styles.userInfo}`}>
-                            <div className={`text-dark me-1 position-relative ${styles.userIcon}`}>
-                              <FaUser />
-                            </div>
                             <span className="visually-hidden">{props.package.repository.userAlias}</span>
-
                             <button
                               data-testid="userLink"
-                              className={`p-0 border-0 text-truncate text-muted mw-100 bg-transparent ${styles.link}`}
+                              className={`d-flex align-items-baseline p-0 border-0 text-truncate text-muted mw-100 bg-transparent ${styles.link}`}
                               onClick={(e) => {
                                 e.preventDefault();
-                                history.push({
+                                navigate({
                                   pathname: '/packages/search',
                                   search: prepareQueryString({
                                     pageNumber: 1,
@@ -222,6 +218,9 @@ const PackageCard = (props: Props) => {
                               aria-hidden="true"
                               tabIndex={-1}
                             >
+                              <div className={`text-dark me-1 position-relative ${styles.userIcon}`}>
+                                <FaUser />
+                              </div>
                               <div className="text-truncate">{props.package.repository.userAlias}</div>
                             </button>
                           </div>

@@ -9,7 +9,7 @@ import styles from './ValuesSearch.module.css';
 interface Props {
   paths?: string[];
   pathsObj?: { [key: number]: string };
-  activePath?: string;
+  activePath?: string | null;
   wrapperClassName?: string;
   onSearch: (selectedPath?: string) => void;
 }
@@ -52,7 +52,7 @@ const ValuesSearch = (props: Props) => {
         <InputTypeahead
           ref={input}
           label="path"
-          listClassName={`position-absolute w-100 border border-top-0 bg-white end-0 ${styles.list}`}
+          listClassName={`position-absolute w-100 border border-1 border-top-0 bg-white end-0 ${styles.list}`}
           optClassName="px-3 py-2"
           options={opts}
           selected={{ path: [] }}

@@ -409,7 +409,7 @@ func LoadChartArchive(ctx context.Context, u *url.URL, o *LoadChartArchiveOption
 		// Get chart content
 		req, _ := http.NewRequest("GET", u.String(), nil)
 		req = req.WithContext(ctx)
-		req.Header.Set("Accept-Encoding", "*")
+		req.Header.Set("Accept-Encoding", "identity")
 		if o.Username != "" || o.Password != "" {
 			req.SetBasicAuth(o.Username, o.Password)
 		}
@@ -564,6 +564,11 @@ func extractContainersImages(chrt *chart.Chart) (images []string, err error) {
 	install := action.NewInstall(&action.Configuration{
 		Log: func(string, ...interface{}) {},
 	})
+	install.KubeVersion = &chartutil.KubeVersion{
+		Version: "1.22",
+		Major:   "1",
+		Minor:   "22",
+	}
 	install.ReleaseName = "release-name"
 	install.DryRun = true
 	install.DisableHooks = true

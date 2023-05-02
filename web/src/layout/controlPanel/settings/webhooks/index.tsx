@@ -2,7 +2,7 @@ import isNull from 'lodash/isNull';
 import isUndefined from 'lodash/isUndefined';
 import { useContext, useEffect, useState } from 'react';
 import { MdAdd, MdAddCircle } from 'react-icons/md';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import API from '../../../../api';
 import { AppCtx } from '../../../../context/AppCtx';
@@ -15,7 +15,7 @@ import WebhookForm from './Form';
 import styles from './WebhooksSection.module.css';
 
 interface Props {
-  activePage?: string;
+  activePage: string | null;
   onAuthError: () => void;
 }
 
@@ -27,7 +27,7 @@ interface VisibleForm {
 }
 
 const WebhooksSection = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { ctx } = useContext(AppCtx);
   const [isGettingWebhooks, setIsGettingWebhooks] = useState(false);
   const [webhooks, setWebhooks] = useState<Webhook[] | undefined>(undefined);
@@ -48,10 +48,9 @@ const WebhooksSection = (props: Props) => {
   };
 
   const updatePageNumber = () => {
-    history.replace({
-      search: `?page=${activePage}`,
-    });
+    navigate(`?page=${activePage}`, { replace: true });
   };
+
   async function fetchWebhooks() {
     try {
       setIsGettingWebhooks(true);
@@ -107,7 +106,7 @@ const WebhooksSection = (props: Props) => {
           ) : (
             <>
               <div>
-                <div className="d-flex flex-row align-items-center justify-content-between pb-2 border-bottom">
+                <div className="d-flex flex-row align-items-center justify-content-between pb-2 border-bottom border-1">
                   <div className={`h3 pb-0 ${styles.title}`}>Webhooks</div>
 
                   <div>

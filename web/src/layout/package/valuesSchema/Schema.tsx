@@ -12,12 +12,12 @@ import SchemaLine from './SchemaLine';
 interface Props {
   schema: JSONSchema;
   normalizedName: string;
-  visibleValuesSchemaPath?: string;
+  visibleValuesSchemaPath?: string | null;
   onPathChange: (path?: string) => void;
 }
 
 const Schema = (props: Props) => {
-  const [activePath, setActivePath] = useState<string | undefined>();
+  const [activePath, setActivePath] = useState<string | undefined | null>();
   const [valuesYAML, setValuesYAML] = useState<string | null>(null);
   const [availablePaths, setAvailablePaths] = useState<string[] | null>(null);
   const [savedOpts, setSavedOpts] = useState<{ [key: string]: number }>({});
@@ -61,7 +61,7 @@ const Schema = (props: Props) => {
         />
       )}
       <div className="row">
-        <div className={`col-7 pt-3 position-relative border border-bottom-0 ${styles.code}`}>
+        <div className={`col-7 pt-3 position-relative border border-1 border-bottom-0 ${styles.code}`}>
           {props.schema.title && (
             <div className={`text-truncate font-monospace ${styles.comment}`}># {props.schema.title}</div>
           )}
