@@ -25,7 +25,7 @@ describe('HelmInstall', () => {
 
   it('creates snapshot', async () => {
     const { asFragment } = render(<HelmInstall {...defaultProps} />);
-    expect(await screen.findByText(`helm repo add ${repo.name} ${repo.url}`)).toBeInTheDocument();
+    expect(await screen.findByText('helm install my-packageName repo/packageName --version 1.0.0')).toBeInTheDocument();
     expect(asFragment()).toMatchSnapshot();
   });
 
@@ -35,7 +35,7 @@ describe('HelmInstall', () => {
 
       expect(await screen.findByText(`helm repo add ${repo.name} ${repo.url}`)).toBeInTheDocument();
       expect(
-        screen.getByText(
+        await screen.findByText(
           `helm install my-${defaultProps.name} ${repo.name}/${defaultProps.name} --version ${defaultProps.version}`
         )
       ).toBeInTheDocument();
